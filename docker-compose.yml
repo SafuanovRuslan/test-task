@@ -9,6 +9,8 @@ services:
       - ./user-management-service/docker/php-fpm/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     environment:
       - PHP_IDE_CONFIG=serverName=full_project
+    env_file:
+      - ./.env
     networks:
       - user.management.network
 
@@ -76,6 +78,8 @@ services:
         - POSTGRES_DB=${TASK_DB_DATABASE}
         - POSTGRES_USER=${TASK_DB_USERNAME}
         - POSTGRES_PASSWORD=${TASK_DB_PASSWORD}
+    env_file:
+      - ./.env
     volumes:
         - ./task-management-service/docker/postgres/datadir:/var/lib/postgresql/data
     ports:
