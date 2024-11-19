@@ -1,0 +1,96 @@
+services:
+  user-management-php:
+    container_name: user-management-php
+    build:
+      context: user-management-service/docker/php-fpm
+    volumes:
+      - ./user-management-service/:/var/www
+      - ./user-management-service/docker/php-fpm/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./user-management-service/docker/php-fpm/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    environment:
+      - PHP_IDE_CONFIG=serverName=full_project
+    networks:
+      - user.management.network
+
+  user-management-nginx:
+    container_name: user-management-nginx
+    build:
+      context: user-management-service/docker/nginx
+    volumes:
+      - ./user-management-service/:/var/www
+    ports:
+      - "8080:80"
+    depends_on:
+      - user-management-php
+    networks:
+      - user.management.network
+
+  user-management-postgres:
+    container_name: user-management-postgres
+    image: postgres
+    restart: always
+    networks:
+      - user.management.network
+    environment:
+      - POSTGRES_DB=${USER_DB_DATABASE}
+      - POSTGRES_USER=${USER_DB_USERNAME}
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+    volumes:
+      - ./user-management-service/docker/postgres/datadir:/var/lib/postgresql/data
+    ports:
+      - "8432:5432"
+
+  task-management-php:
+    container_name: task-management-php
+    build:
+      context: task-management-service/docker/php-fpm
+    volumes:
+      - ./task-management-service/:/var/www
+      - ./task-management-service/docker/php-fpm/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./task-management-service/docker/php-fpm/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    environment:
+      - PHP_IDE_CONFIG=serverName=full_project
+    networks:
+      - task.management.network
+
+  task-management-nginx:
+    container_name: task-management-nginx
+    build:
+      context: task-management-service/docker/nginx
+    volumes:
+      - ./task-management-service/:/var/www
+    ports:
+      - "8081:80"
+    depends_on:
+      - task-management-php
+    networks:
+      - task.management.network
+
+  task-management-postgres:
+    container_name: task-management-postgres
+    image: postgres
+    restart: always
+    networks:
+        - task.management.network
+    environment:
+        - POSTGRES_DB=${TASK_DB_DATABASE}
+        - POSTGRES_USER=${TASK_DB_USERNAME}
+        - POSTGRES_PASSWORD=${TASK_DB_PASSWORD}
+    volumes:
+        - ./task-management-service/docker/postgres/datadir:/var/lib/postgresql/data
+    ports:
+        - "8433:5432"
+
+networks:
+  user.management.network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.121.0/28
+  task.management.network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.122.0/28
