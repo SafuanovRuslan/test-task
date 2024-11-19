@@ -12,9 +12,10 @@ class ExceptionFormat
         $response = $next($request);
         if ($response->exception) {
             try {
+                $code = $response->exception->getCode() ?: $response->exception->getStatusCode();
                 return response()->json([
                     'message' => $response->exception->getMessage(),
-                ], $response->exception->getStatusCode());
+                ], $code);
             } catch (\Throwable) {
                 return response()->json([
                     'message' => "Unknown error. Contact the administrator.",
