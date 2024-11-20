@@ -16,13 +16,13 @@ class TaskService
      */
     public function store(array $requestData): Task
     {
-        $user = $this->taskRepository->new();
-        $user->fill($requestData);
+        $task = $this->taskRepository->new();
+        $task->fill($requestData);
 
-        $user->description = $user->description ?? '';
+        $task->description = $task->description ?? '';
 
-        if ($this->taskRepository->store($user)) {
-            return $user;
+        if ($this->taskRepository->store($task)) {
+            return $task;
         }
 
         throw new Exception("Unknown error. Contact the administrator.", 500);
@@ -33,8 +33,8 @@ class TaskService
      */
     public function getById(int $userId): Task
     {
-        if ($user = $this->taskRepository->getById($userId)) {
-            return $user;
+        if ($task = $this->taskRepository->getById($userId)) {
+            return $task;
         }
 
         throw new Exception("Task not found.", 404);
@@ -50,15 +50,15 @@ class TaskService
      */
     public function update(int $userId, array $requestData): Task
     {
-        $user = $this->taskRepository->getById($userId);
-        if (!$user) {
+        $task = $this->taskRepository->getById($userId);
+        if (!$task) {
             throw new Exception("Task not found.", 404);
         }
 
-        $user->fill($requestData);
+        $task->fill($requestData);
 
-        if ($this->taskRepository->update($user)) {
-            return $user;
+        if ($this->taskRepository->update($task)) {
+            return $task;
         }
 
         throw new Exception("Unknown error. Contact the administrator.", 500);
@@ -67,9 +67,9 @@ class TaskService
     /**
      * @throws Exception
      */
-    public function delete(int $userId): bool
+    public function delete(int $id): bool
     {
-        if ($this->taskRepository->delete($userId)) {
+        if ($this->taskRepository->delete($id)) {
             return true;
         }
 

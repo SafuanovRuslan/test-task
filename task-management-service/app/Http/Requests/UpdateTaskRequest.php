@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Task\Task;
+use App\Rules\UserExist;
 use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends ApiRequest
@@ -15,7 +16,7 @@ class UpdateTaskRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['int'],
+            'user_id' => ['int', new UserExist()],
             'title' => ['string', 'max:256'],
             'description' => ['string', 'max:2000'],
             'category_id' => ['int', 'exists:categories,id'],

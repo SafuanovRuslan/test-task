@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserExist;
+
 class StoreTaskRequest extends ApiRequest
 {
     /**
@@ -12,7 +14,7 @@ class StoreTaskRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'int'],
+            'user_id' => ['required', 'int', new UserExist()],
             'title' => ['required', 'string', 'max:256'],
             'description' => ['string', 'max:2000'],
             'category_id' => ['required', 'int', 'exists:categories,id'],
