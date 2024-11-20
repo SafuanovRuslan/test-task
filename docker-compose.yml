@@ -91,6 +91,25 @@ services:
     ports:
         - "8433:5432"
 
+  common-redis:
+    container_name: common-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "8379:6379"
+    volumes:
+      - ./common/docker/redis/dаta:/root/redis
+      - ./common/docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DATABASES=16
+      - REDIS_HOST_PASSWORD=${REDIS_HOST_PASSWORD}
+    command: redis-server --requirepass ${REDIS_HOST_PASSWORD}
+    networks:
+      - user.management.network
+      - task.management.network
+
 networks:
   user.management.network:
     driver: bridge

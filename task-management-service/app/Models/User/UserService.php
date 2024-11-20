@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class UserService
@@ -24,5 +25,12 @@ class UserService
             default:
                 throw new Exception("Unknown error. Contact the administrator.", 500);
         }
+    }
+
+    public function updateUserCache(int $userId, string $userEmail): void
+    {
+        $users = Cache::get('users', []);
+        $users[$userId] = $userEmail;
+        Cache::set('users', $users);
     }
 }

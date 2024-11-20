@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Events\UserCreated;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -20,6 +21,7 @@ class UserService
         $user->fill($requestData);
 
         if ($this->userRepository->store($user)) {
+            UserCreated::dispatch($user->id, $user->email);
             return $user;
         }
 
