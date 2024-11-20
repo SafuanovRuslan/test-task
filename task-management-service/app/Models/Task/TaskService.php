@@ -45,6 +45,16 @@ class TaskService
         return $this->taskRepository->getAll();
     }
 
+    public function getBugs(): Collection
+    {
+        return $this->taskRepository->getBugs();
+    }
+
+    public function getFeatures(): Collection
+    {
+        return $this->taskRepository->getFeatures();
+    }
+
     /**
      * @throws Exception
      */

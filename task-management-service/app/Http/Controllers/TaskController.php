@@ -23,6 +23,22 @@ class TaskController extends Controller
     }
 
     /**
+     * Display a listing of the resource (bugs only).
+     */
+    public function bugs(): JsonResponse
+    {
+        return response()->json($this->taskService->getBugs());
+    }
+
+    /**
+     * Display a listing of the resource (feature only).
+     */
+    public function features(): JsonResponse
+    {
+        return response()->json($this->taskService->getFeatures());
+    }
+
+    /**
      * @throws Exception
      */
     public function store(StoreTaskRequest $request): JsonResponse
