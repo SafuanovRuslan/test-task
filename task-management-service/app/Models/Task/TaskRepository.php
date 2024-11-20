@@ -2,6 +2,7 @@
 
 namespace App\Models\Task;
 
+use App\Models\Category\Category;
 use Illuminate\Database\Eloquent\Collection;
 
 class TaskRepository
@@ -21,6 +22,25 @@ class TaskRepository
     public function getAll(): Collection
     {
         return Task::query()->get();
+    }
+
+    public function getBugs(): Collection
+    {
+        // Реализуйте запросы, которые используют соединение нескольких таблиц (например, получение всех задач по категории).
+        return Category::query()
+            ->where('id', '=', Category::BUG)
+            ->with('tasks')
+            ->get();
+    }
+
+    public function getFeatures(): Collection
+    {
+        // Реализуйте запросы, которые используют соединение нескольких таблиц (например, получение всех задач по категории).
+        return Task::query()
+            ->select(['tasks.*'])
+            ->leftJoin('categories', 'tasks.category_id', '=', 'categories.id')
+            ->where('categories.id', '=', Category::FEATURE)
+            ->get();
     }
 
     public function store(Task $task): bool

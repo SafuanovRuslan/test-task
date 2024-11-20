@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Category extends Model
 {
+    public const BUG = 1;
+    public const FEATURE = 2;
+
     protected $table = 'categories';
     protected $hidden = ['created_at', 'updated_at'];
 

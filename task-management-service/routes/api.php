@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/tasks/bugs', [TaskController::class, 'bugs']);
+Route::get('/tasks/features', [TaskController::class, 'features']);
 Route::apiResource('tasks', TaskController::class);
 
 

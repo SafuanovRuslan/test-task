@@ -18,6 +18,18 @@ class TaskTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_bug_list(): void
+    {
+        $response = $this->get('/api/tasks/bugs');
+        $response->assertStatus(200);
+    }
+
+    public function test_feature_list(): void
+    {
+        $response = $this->get('/api/tasks/features');
+        $response->assertStatus(200);
+    }
+
     public function test_task_store_and_show(): void
     {
         $this->seed(CategorySeeder::class);
