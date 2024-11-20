@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\UserServiceFacade;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -20,12 +22,7 @@ class TaskTest extends TestCase
     {
         $this->seed(CategorySeeder::class);
 
-        $response = $this->post('/api/tasks', [
-            "user_id" => "1",
-            "title" => "test",
-            "category_id" => "2",
-        ]);
-        $response->assertStatus(201);
+        $this->createTestUser();
 
         $response = $this->get('/api/tasks/1');
         $response->assertStatus(200);
@@ -45,12 +42,7 @@ class TaskTest extends TestCase
     {
         $this->seed(CategorySeeder::class);
 
-        $response = $this->post('/api/tasks', [
-            "user_id" => "1",
-            "title" => "test",
-            "category_id" => "2",
-        ]);
-        $response->assertStatus(201);
+        $response = $this->createTestUser();
 
         $id = json_decode($response->content(), true)['id'];
         $response = $this->put("/api/tasks/$id", [
@@ -71,12 +63,7 @@ class TaskTest extends TestCase
     {
         $this->seed(CategorySeeder::class);
 
-        $response = $this->post('/api/tasks', [
-            "user_id" => "1",
-            "title" => "test",
-            "category_id" => "2",
-        ]);
-        $response->assertStatus(201);
+        $response = $this->createTestUser();
 
         $id = json_decode($response->content(), true)['id'];
         $response = $this->delete("/api/tasks/$id");
@@ -87,5 +74,25 @@ class TaskTest extends TestCase
     {
         $response = $this->delete("/api/tasks/999");
         $response->assertStatus(404);
+    }
+
+    private function createTestUser(): TestResponse
+    {
+        UserServiceFacade::shouldReceive('getById')
+            ->with(1)
+            ->andReturn([
+                "id" => 1,
+                "name" => "test_name",
+                "email" => "test@email.com"
+            ]);
+
+        $response = $this->post('/api/tasks', [
+            "user_id" => "1",
+            "title" => "test",
+            "category_id" => "2",
+        ]);
+        $response->assertStatus(201);
+
+        return $response;
     }
 }
